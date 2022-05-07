@@ -1,14 +1,16 @@
+const isTunnel = false;
+
 const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
 
-const width = 300;
+
+const width = isTunnel? 300: 100;
 const height = 100;
 const size = 5;
 
 const c = 1.2;
 var dt = 1;
 const relaxationTime = 3;
-const isTunnel = true;
 
 var e = [[0,0],[1,0],[0,1],[-1,0],[0,-1],[1,1],[-1,1],[-1,-1],[1,-1]];
 var oppisite = [0,3,4,1,2,7,8,5,6]
@@ -86,13 +88,16 @@ function initialize(){
 
     // f[0][50][10][1] = 1;
 
-   var wallSize = 30
+    canvas.width = width*size;
+    canvas.height = height*size;
+
+    if(!isTunnel)
+        return
+
+    var wallSize = 30
     for(let i = 0; i < wallSize; i++){
         walls[(Math.floor((height-wallSize)/2) + i)*width + 60] = true;
     }
-
-    canvas.width = width*size;
-    canvas.height = height*size;
 }
 
 function createNewTimeLayer(t){
@@ -253,7 +258,10 @@ function loop(){
         }
 
         t+=dt;
-        drawVectorField();
+        if(isTunnel)
+            drawVectorField();
+        else
+            draw();
     },0)
 }
 
@@ -299,7 +307,7 @@ canvas.addEventListener('mousedown',(evt)=>{
     var blobSize = 10;
     for(let row = 0; row < blobSize; row++){
         for(let colm = 0; colm < blobSize; colm++)
-            f[t][Math.floor(evt.offsetY/size) + colm][Math.floor(evt.offsetX/size) + row][5] = 100;
+            f[t][Math.floor(evt.offsetY/size) + colm][Math.floor(evt.offsetX/size) + row][1] = 10;
     }
 })
 
