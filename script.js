@@ -1,4 +1,4 @@
-const isTunnel = false;
+const isTunnel = true;
 
 const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
@@ -6,7 +6,7 @@ const ctx = canvas.getContext('2d');
 
 const width = isTunnel? 300: 100;
 const height = 100;
-const size = 5;
+const size = 20;
 
 const c = 1.2;
 var dt = 1;
@@ -159,87 +159,9 @@ function colision(pos){
 
 }
 
-function draw(time = t){
-    for(let row = 0; row < height; row++){
-        for(let colm = 0; colm < width; colm++){
-            var p = getP({x:colm,y:row},time);
-            var u = getU({x:colm,y:row},time,p);
-            // SPEED
-            var redValue = Math.min(255 * Math.sqrt(u[0]**2 + u[1]**2), 255);
-            redValue = redValue || 0;
-            ctx.fillStyle = `rgb(${redValue},0,${255-redValue})`;
-
-            //SPEED with derection
-            // var redValue = (u[1] < 0) ? 0 : 255;
-
-            // var greenValue = 255 - Math.min(255 * Math.sqrt(u[1]**2), 255);
-
-            // ctx.fillStyle = `rgb(${redValue},${greenValue},${255-redValue})`;
-            
-            ctx.fillRect(colm*size,row*size,size,size);
-
-        }
-    }
-    for(let pos in walls){
-        let y = Math.floor(pos.toString()/width);
-        let x = pos.toString()% width;
-
-        ctx.fillStyle = `black`;
-
-        ctx.fillRect(x*size,y*size,size,size);
-        
-    }
-}
-
-function drawVectorField(time = t){
-    vectorSize = 5;
-    for(let row = 0; row < height; row+=vectorSize){
-        for(let colm = 0; colm < width; colm+=vectorSize){
-            var Usum = [];
-            for(let irow = 0; irow<vectorSize; irow++){
-                for(icolm =0; icolm<vectorSize; icolm++){
-                    var p = getP({x:colm+icolm,y:row+irow},time);
-                    var u = getU({x:colm+icolm,y:row+irow},time,p);
-                    Usum += u[0];
-                    Usum += u[1];
-                }    
-            }
-
-            drawArrow((colm+vectorSize/2)*size,(row+vectorSize/2)*size,2*size*u[0]/Math.abs(u[0]),2*size*u[1]/Math.abs(u[1]))
-        }
-    }
-    for(let pos in walls){
-        let y = Math.floor(pos.toString()/width);
-        let x = pos.toString()% width;
-
-        ctx.fillStyle = `black`;
-
-        ctx.fillRect(x*size,y*size,size,size);
-        
-    }
-}
-
-
-function drawArrow(fromx, fromy, dx, dy) {
-    dx = dx||0;
-    dy = dy||0;
-
-    var headlen = size; // length of head in pixels
-    var tox = dx + fromx;
-    var toy = dy + fromy;
-    var angle = Math.atan2(dy, dx);
-    ctx.beginPath();
-    ctx.moveTo(fromx, fromy);
-    ctx.lineTo(tox, toy);
-    ctx.lineTo(tox - headlen * Math.cos(angle - Math.PI / 6), toy - headlen * Math.sin(angle - Math.PI / 6));
-    ctx.moveTo(tox, toy);
-    ctx.lineTo(tox - headlen * Math.cos(angle + Math.PI / 6), toy - headlen * Math.sin(angle + Math.PI / 6));
-    ctx.stroke();
-  }
-
 function loop(){
     initialize();
-    draw();
+    // draw();
 
     setInterval(()=>{
         ctx.clearRect(0,0,canvas.width,canvas.height)
@@ -258,10 +180,9 @@ function loop(){
         }
 
         t+=dt;
-        if(isTunnel)
-            drawVectorField();
-        else
-            draw();
+        // draw();
+        drawVectorField();
+        // drawSpiralDirection();
     },0)
 }
 
