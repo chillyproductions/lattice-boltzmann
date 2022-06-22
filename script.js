@@ -3,13 +3,13 @@ const isTunnel = true;
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
 
-const width = isTunnel ? 300 : 100;
-const height = 100;
+const width = isTunnel ? 800 : 100;
+const height = 600;
 const size = 10;
 
 const c = 1;
 const relaxationTime = 3;
-const flowSpeed = 10;
+const flowSpeed = 30;
 
 var dt = 1;
 var e = [
@@ -107,8 +107,8 @@ function initialize() {
   //   walls[(Math.floor((height - wallSize) / 2) + i) * width + 40] = true;
   // }
 
-  var ballRadius = 15;
-  var ballCenter = [Math.floor(height/2), 50];
+  var ballRadius = 100;
+  var ballCenter = [Math.floor(height/2), 200];
   for(let row = -ballRadius; row < ballRadius; row++){
       for(let colm = -ballRadius; colm < ballRadius; colm++){
           if(row**2 + colm**2 <= ballRadius**2){
@@ -207,7 +207,7 @@ function movePaint() {
 }
 
 function addPaintLayer() {
-  for (let i = 35; i < 40; i++) {
+  for (let i = Math.floor(height/2)-30; i < Math.floor(height/2); i++) {
     paint[t].push({ y: i, x: 5 });
   }
 }
@@ -215,11 +215,11 @@ function addPaintLayer() {
 function loop() {
   initialize();
 
-  setInterval(() => {
+  var intervalElem = setInterval(() => {
     if (t >= 2) delete f[t - 2];
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
     createNewTimeLayer(t + dt);
-
     for (let x = 0; x < width; x++) {
       for (let y = 0; y < height; y++) {
         stream({ x, y });
@@ -231,19 +231,29 @@ function loop() {
         colision({ x, y });
       }
     }
+  
+    var timeUntilPaint = 50;
 
-    if (t % 10 == 0) addPaintLayer();
+    if(t==timeUntilPaint) paint[t] = [];
 
-    movePaint();
-
+    if(t>= timeUntilPaint){
+      if (t % 10 == 0) addPaintLayer();
+      movePaint();
+    }
+    
     t += dt;
 
-    drawSpeed();
-    // drawSpiralDirection();
-    drawVectorField();
-    drawPaint();
+    document.getElementById('loading-bar').innerText = t;
+    if(t==400){
+      drawSpeed();
+      // drawSpiralDirection();
+      drawVectorField();
+      if(t>timeUntilPaint) drawPaint();
+  
+      drawWalls();
+      clearInterval(intervalElem);
+    }
 
-    drawWalls();
   }, 0);
 }
 
@@ -263,7 +273,7 @@ function createVideo(videoDuration) {
         colision({ x, y });
       }
     }
-
+    
     if (i % 10 == 0) addPaintLayer();
 
     movePaint();
@@ -278,9 +288,9 @@ function playVideo() {
   let videoLoop = setInterval(() => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // drawSpeed(i);
+    drawSpeed(i);
     // drawSpiralDirection(i);
-    // drawVectorField(i);
+    drawVectorField(i);
 
     drawWalls();
     drawPaint(i);
