@@ -3,16 +3,16 @@ const isTunnel = true;
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
 
-const width = isTunnel ? 300 : 100;
-const height = 100;
-const size = 10;
+const width = isTunnel ? 600 : 100;
+const height = 200;
+const size = 4;
 
-var ballRadius = 15;
-var ballCenter = [Math.floor(height/2), 50];
+var ballRadius = 24;
+var ballCenter = [Math.floor(height/2), 125];
 
 const c = 1;
 const relaxationTime = 3;
-const flowSpeed = 2;
+const flowSpeed = 3;
 
 var dt = 1;
 var e = [
@@ -208,9 +208,11 @@ function movePaint() {
 }
 
 function addPaintLayer() {
-  for (let i = 35; i < 40; i++) {
-    paint[t].push({ y: i, x: 5 });
-  }
+  // for (let i = 35; i < 40; i++) {
+    // paint[t].push({ y: i, x: 5 });
+    // }
+    paint[t].push({ y: 81, x: 0 });
+
 }
 
 function loop() {
@@ -242,7 +244,7 @@ function loop() {
     // drawSpeed();
     // drawSpiralDirection();
     drawVectorField();
-    // drawPaint();
+    drawPaint();
     // drawTheoryVectorField();
 
     drawWalls();
@@ -295,20 +297,29 @@ function playVideo() {
 }
 
 canvas.addEventListener("mousedown", (evt) => {
-  console.log(
-    f[t][Math.floor(evt.offsetY / size)][Math.floor(evt.offsetY / size)]
-  );
+  // console.log(
+  //   f[t][Math.floor(evt.offsetY / size)][Math.floor(evt.offsetY / size)]
+  // );
 
-  paint.push({
-    x: Math.floor(evt.offsetX / size),
-    y: Math.floor(evt.offsetY / size),
-  });
+  // paint.push({
+  //   x: Math.floor(evt.offsetX / size),
+  //   y: Math.floor(evt.offsetY / size),
+  // });
 
   // var blobSize = 10;
   // for(let row = 0; row < blobSize; row++){
   //     for(let colm = 0; colm < blobSize; colm++)
   //         f[t][Math.floor(evt.offsetY/size) + colm][Math.floor(evt.offsetX/size) + row][1] = 10;
   // }
+
+  var dataX = [];
+  var dataY = []
+  for(let dot of paint[t]){
+      dataX.push((dot.x-ballCenter[1])/ballRadius);
+      dataY.push((ballCenter[0]-dot.y)/ballRadius);
+  }
+  console.log("const simulationX = [" + dataX+ "]");
+  console.log("const simulationY = [" + dataY+ "]");
 });
 
 loop();
