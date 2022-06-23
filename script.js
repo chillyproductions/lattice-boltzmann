@@ -7,9 +7,12 @@ const width = isTunnel ? 300 : 100;
 const height = 100;
 const size = 10;
 
+var ballRadius = 15;
+var ballCenter = [Math.floor(height/2), 50];
+
 const c = 1;
 const relaxationTime = 3;
-const flowSpeed = 10;
+const flowSpeed = 2;
 
 var dt = 1;
 var e = [
@@ -107,8 +110,6 @@ function initialize() {
   //   walls[(Math.floor((height - wallSize) / 2) + i) * width + 40] = true;
   // }
 
-  var ballRadius = 15;
-  var ballCenter = [Math.floor(height/2), 50];
   for(let row = -ballRadius; row < ballRadius; row++){
       for(let colm = -ballRadius; colm < ballRadius; colm++){
           if(row**2 + colm**2 <= ballRadius**2){
@@ -238,10 +239,11 @@ function loop() {
 
     t += dt;
 
-    drawSpeed();
+    // drawSpeed();
     // drawSpiralDirection();
     drawVectorField();
-    drawPaint();
+    // drawPaint();
+    // drawTheoryVectorField();
 
     drawWalls();
   }, 0);
@@ -264,9 +266,9 @@ function createVideo(videoDuration) {
       }
     }
 
-    if (i % 10 == 0) addPaintLayer();
+    // if (i % 10 == 0) addPaintLayer();
 
-    movePaint();
+    // movePaint();
 
     t += dt;
   }
